@@ -1,0 +1,11 @@
+package com.devaworks.DevaRessort.repository;
+
+import java.util.List;
+
+import com.devaworks.DevaRessort.model.BookedRoom;
+
+public interface BooingRepository {
+
+	List<BookedRoom> findAll();
+
+}

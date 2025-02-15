@@ -1,0 +1,19 @@
+//package com.devaworks.DevaRessort.service;
+//
+//import org.springframework.stereotype.Service;
+//import com.devaworks.DevaRessort.repository.BookingRepository;
+//import com.devaworks.DevaRessort.model.BookedRoom;
+//import java.util.List;
+//
+//@Service
+//public class RoomBookingHelper {
+//    private final BookingRepository bookingRepository;
+//
+//    public RoomBookingHelper(BookingRepository bookingRepository) {
+//        this.bookingRepository = bookingRepository;
+//    }
+//
+//    public List<BookedRoom> getAllBookingsByRoomId(Long roomId) {
+//        return bookingRepository.findByRoomId(roomId);
+//    }
+//}

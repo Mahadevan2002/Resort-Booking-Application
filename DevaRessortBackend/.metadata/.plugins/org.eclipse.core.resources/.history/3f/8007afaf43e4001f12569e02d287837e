@@ -1,0 +1,25 @@
+package com.devaworks.DevaRessort.service;
+
+import java.util.List;
+
+import com.devaworks.DevaRessort.model.BookedRoom;
+import com.devaworks.DevaRessort.repository.BookingRepository;
+
+public class BookingService implements IBookingService {
+
+	
+	 public BookingService(BookingRepository bookingRepository) {
+		super();
+		this.bookingRepository = bookingRepository;
+	}
+
+
+	private final BookingRepository bookingRepository;
+	 
+	 
+	   @Override
+	    public List<BookedRoom> getAllBookingsByRoomId(Long roomId) {
+	        return bookingRepository.findByRoomId(roomId);
+	    }
+     
+}

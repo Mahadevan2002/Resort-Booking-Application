@@ -1,0 +1,31 @@
+//package com.devaworks.DevaRessort.contoller;
+//
+//
+//import org.springframework.beans.factory.annotation.Autowired;
+//import org.springframework.http.ResponseEntity;
+//import org.springframework.web.bind.annotation.*;
+//
+//import com.devaworks.DevaRessort.model.Login;
+//import com.devaworks.DevaRessort.service.ILogingService;
+//import com.devaworks.DevaRessort.service.LoginService;
+//
+//@CrossOrigin(origins = "http://localhost:5173") // Allow frontend to access API
+//@RestController
+//@RequestMapping("/api/users")
+//public class LoginController {
+//
+//    @Autowired
+//    private ILogingService iloginService;
+//
+//    @PostMapping("/register")
+//    public ResponseEntity<String> registerUser(@RequestBody Login login) {
+//    	
+//    	System.out.println("Hi i am from controller" + login);
+//        boolean isRegistered = iloginService.registerUser(login);
+//        if (isRegistered) {
+//            return ResponseEntity.ok("Login Successfully! ✅");
+//        } else {
+//            return ResponseEntity.badRequest().body("Username already exists!");
+//        }
+//    }
+//}

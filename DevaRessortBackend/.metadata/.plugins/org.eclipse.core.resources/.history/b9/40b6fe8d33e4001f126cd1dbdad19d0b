@@ -1,0 +1,70 @@
+package com.devaworks.DevaRessort.service;
+
+import org.springframework.stereotype.Service;
+import com.devaworks.DevaRessort.exception.InvalidBookingRequestException;
+import com.devaworks.DevaRessort.exception.ResourceNotFoundException;
+import com.devaworks.DevaRessort.model.BookedRoom;
+import com.devaworks.DevaRessort.model.Room;
+import com.devaworks.DevaRessort.repository.BookingRepository;
+import java.util.List;
+import java.util.Optional;
+
+@Service
+public class BookingService implements IBookingService {
+    private final BookingRepository bookingRepository;
+    private final RoomService roomService;
+
+    public BookingService(BookingRepository bookingRepository, RoomService roomService) {
+        this.bookingRepository = bookingRepository;
+        this.roomService = roomService;
+    }
+
+    @Override
+    public List<BookedRoom> getAllBookings() {
+        return bookingRepository.findAll();
+    }
+
+    @Override
+    public List<BookedRoom> getBookingsByUserEmail(String email) {
+        return bookingRepository.findByGuestEmail(email);
+    }
+
+    @Override
+    public void cancelBooking(Long bookingId) {
+        bookingRepository.deleteById(bookingId);
+    }
+
+    @Override
+    public List<BookedRoom> getAllBookingsByRoomId(Long roomId) {
+        return bookingRepository.findByRoomId(roomId);
+    }
+
+    @Override
+    public String saveBooking(Long roomId, BookedRoom bookingRequest) {
+        if (bookingRequest.getCheckOutDate().isBefore(bookingRequest.getCheckInDate())) {
+            throw new InvalidBookingRequestException("Check-in date must come before check-out date");
+        }
+        Room room = roomService.getRoomById(roomId)
+                .orElseThrow(() -> new ResourceNotFoundException("Room not found"));
+        List<BookedRoom> existingBookings = room.getBookings();
+        boolean roomIsAvailable = roomIsAvailable(bookingRequest, existingBookings);
+        if (roomIsAvailable) {
+            room.addBooking(bookingRequest);
+            bookingRepository.save(bookingRequest);
+        } else {
+            throw new InvalidBookingRequestException("Sorry, This room is not available for the selected dates;");
+        }
+        return bookingRequest.getBookingConfirmationCode();
+    }
+
+    private boolean roomIsAvailable(BookedRoom bookingRequest, List<BookedRoom> existingBookings) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+    public BookedRoom findByBookingConfirmationCode(String confirmationCode) {
+        return bookingRepository.findByBookingConfirmationCode(confirmationCode)
+                .orElseThrow(() -> new ResourceNotFoundException("No booking found with booking code: " + confirmationCode));
+    }
+}

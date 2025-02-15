@@ -1,0 +1,9 @@
+//package com.devaworks.DevaRessort.service;
+//
+//import com.devaworks.DevaRessort.model.Login;
+//
+//public interface ILogingService {
+//
+//	boolean registerUser(Login login);
+//
+//}

@@ -1,0 +1,14 @@
+package com.devaworks.DevaRessort.contoller;
+
+import java.util.List;
+
+import com.devaworks.DevaRessort.model.BookedRoom;
+
+public class bookingService {
+
+	 @Override
+	    public List<BookedRoom> getAllBookingsByRoomId(Long roomId) {
+	        return bookingRepository.findByRoomId(roomId);
+	    }
+
+}

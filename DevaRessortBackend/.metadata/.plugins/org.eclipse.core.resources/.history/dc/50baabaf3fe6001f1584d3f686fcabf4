@@ -1,0 +1,5 @@
+package com.devaworks.DevaRessort.contoller;
+
+public class AuthUserController {
+
+}

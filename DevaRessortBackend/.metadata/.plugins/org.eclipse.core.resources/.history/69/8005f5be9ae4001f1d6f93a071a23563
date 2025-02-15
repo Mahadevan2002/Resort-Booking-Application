@@ -1,0 +1,5 @@
+package com.devaworks.DevaRessort.security;
+
+public class CorsConfig {
+
+}

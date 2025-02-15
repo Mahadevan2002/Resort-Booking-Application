@@ -1,0 +1,113 @@
+/* Scoped styles for login page
+.login-page {
+    font-family: 'Jost', sans-serif;
+    background-color: #f6feff; 
+    color: #232c3d;
+    transition: 0.5s;
+    margin: 0;
+    padding-left: 450px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+  }
+  
+  .login-page.dark-mode {
+    background-color: #121212;
+    color: white;
+  }
+  
+  .login-page .login-box {
+    background-color: white;
+    width: 100%;
+    max-width: 400px;
+    border-radius: 10px;
+    margin-top: 50px;
+    padding: 40px;
+    box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.1);
+    text-align: center;
+    transition: 0.5s;
+  }
+  
+  @media only screen and (max-width: 768px) {
+    .login-page .login-box {
+      width: 100%;
+      padding: 30px;
+    }
+  }
+  
+  @media only screen and (max-width: 1366px) {
+    .login-page .login-box {
+      width: 70%;
+      padding: 35px;
+    }
+  }
+  
+  .login-page.dark-mode .login-box {
+    background-color: #2b2b2b;
+  }
+  
+  .login-page h1 {
+    color: #232c3d;
+    transition: 0.5s;
+  }
+  
+  .login-page.dark-mode h1 {
+    color: white;
+  }
+  
+  .login-page form {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 15px;
+  }
+  
+  .login-page input {
+    width: 100%;
+    padding: 12px;
+    font-size: 16px;
+    border: 1px solid #ccc;
+    background-color: #f0f5ff;
+    border-radius: 10px;
+    transition: 0.5s;
+  }
+  
+  .login-page.dark-mode input {
+    background-color: #424242;
+    color: white;
+    border-color: #444;
+  }
+  
+  .login-page input:focus {
+    outline: none;
+    border-color: #63c4ff;
+  }
+  
+  .login-page button {
+    width: 100%;
+    padding: 12px;
+    font-size: 16px;
+    font-weight: bold;
+    background-color: #63c4ff;
+    color: white;
+    border-radius: 20px;
+    border: none;
+    cursor: pointer;
+    transition: 0.5s;
+  }
+  
+  .login-page button:hover {
+    background-color: #519cc4;
+  }
+  
+  .login-page.dark-mode button {
+    background-color: #bb3f6e;
+  }
+  
+  .login-page.dark-mode button:hover {
+    background-color: #9e2d56;
+  }
+*/
+  
+ 

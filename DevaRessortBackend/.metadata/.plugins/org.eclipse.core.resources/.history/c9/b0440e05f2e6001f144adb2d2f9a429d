@@ -1,0 +1,106 @@
+package com.devaworks.DevaRessort.contoller;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+import com.devaworks.DevaRessort.exception.InvalidBookingRequestException;
+import com.devaworks.DevaRessort.exception.ResourceNotFoundException;
+import com.devaworks.DevaRessort.model.BookedRoom;
+import com.devaworks.DevaRessort.model.Room;
+import com.devaworks.DevaRessort.response.BookingResponse;
+import com.devaworks.DevaRessort.response.RoomResponse;
+import com.devaworks.DevaRessort.service.IBookingService;
+import com.devaworks.DevaRessort.service.IRoomService;
+
+import jakarta.transaction.Transactional;
+import lombok.RequiredArgsConstructor;
+
+//@RequiredArgsConstructor
+@CrossOrigin(origins = "http://localhost:5173") // Allow frontend to access API
+@RestController
+@RequestMapping("/bookings")
+public class BookingController {
+	
+	 private final IBookingService bookingService;
+     private final IRoomService roomService;
+
+	
+	public BookingController(IBookingService bookingService, IRoomService roomService) {
+		super();
+		this.bookingService = bookingService;
+		this.roomService = roomService;
+	}
+
+
+	@GetMapping("/all-bookings")
+	@PreAuthorize("hasRole('ROLE_ADMIN')")
+    public ResponseEntity<List<BookingResponse>> getAllBookings(){
+        List<BookedRoom> bookings = bookingService.getAllBookings();
+        List<BookingResponse> bookingResponses = new ArrayList<>();
+        for (BookedRoom booking : bookings){
+            BookingResponse bookingResponse = getBookingResponse(booking);
+            bookingResponses.add(bookingResponse);
+        }
+        return ResponseEntity.ok(bookingResponses);
+    }
+	
+
+    @GetMapping("/confirmation/{confirmationCode}")
+    public ResponseEntity<?> getBookingByConfirmationCode(@PathVariable String confirmationCode){
+        try{
+            BookedRoom booking = bookingService.findByBookingConfirmationCode(confirmationCode);
+            BookingResponse bookingResponse = getBookingResponse(booking);
+            return ResponseEntity.ok(bookingResponse);
+        }catch (ResourceNotFoundException ex){
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ex.getMessage());
+        }
+    }
+
+   
+    @Transactional
+    @PostMapping("/room/{roomId}/booking")
+    public ResponseEntity<?> saveBooking(@PathVariable Long roomId,
+                                         @RequestBody BookedRoom bookingRequest){
+        try{
+            String confirmationCode = bookingService.saveBooking(roomId, bookingRequest);
+            return ResponseEntity.ok(
+                    "Room booked successfully, Your booking confirmation code is :"+confirmationCode);
+
+        }catch (Exception e){
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+    
+
+    @DeleteMapping("/booking/{bookingId}/delete")
+    public void cancelBooking(@PathVariable Long bookingId){
+        bookingService.cancelBooking(bookingId);
+    }
+    
+    private BookingResponse getBookingResponse(BookedRoom booking) {
+        Room theRoom = roomService.getRoomById(booking.getRoom().getId()).get();
+        RoomResponse room = new RoomResponse(
+                theRoom.getId(),
+                theRoom.getRoomType(),
+                theRoom.getRoomPrice());
+        return new BookingResponse(
+                booking.getBookingId(), booking.getCheckInDate(),
+                booking.getCheckOutDate(),booking.getGuestFullName(),
+                booking.getGuestEmail(), booking.getNumofAdults(),
+                booking.getNumofChildren(), booking.getTotalNumofGuest(),
+                booking.getBookingConfirmationCode(), room);
+    }
+	 
+}

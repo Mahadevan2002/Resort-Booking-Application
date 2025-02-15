@@ -1,0 +1,80 @@
+package com.devaworks.DevaRessort.contoller;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+import com.devaworks.DevaRessort.exception.InvalidBookingRequestException;
+import com.devaworks.DevaRessort.exception.ResourceNotFoundException;
+import com.devaworks.DevaRessort.model.BookedRoom;
+import com.devaworks.DevaRessort.response.BookingResponse;
+import com.devaworks.DevaRessort.service.IBookingService;
+
+import lombok.RequiredArgsConstructor;
+
+
+
+@RequiredArgsConstructor
+//@RestController
+@RequestMapping("/bookings")
+public class BookingController {
+	
+	 private final IBookingService bookingService;
+
+	public BookingController(IBookingService bookingService) {
+		super();
+		this.bookingService = bookingService;
+	}
+	
+	@GetMapping("/all-bookings")
+    public ResponseEntity<List<BookingResponse>> getAllBookings(){
+        List<BookedRoom> bookings = bookingService.getAllBookings();
+        List<BookingResponse> bookingResponses = new ArrayList<>();
+        for (BookedRoom booking : bookings){
+            BookingResponse bookingResponse = getBookingResponse(booking);
+            bookingResponses.add(bookingResponse);
+        }
+        return ResponseEntity.ok(bookingResponses);
+    }
+	
+	
+    @PostMapping("/room/{roomId}/booking")
+    public ResponseEntity<?> saveBooking(@PathVariable Long roomId,
+                                         @RequestBody BookedRoom bookingRequest){
+        try{
+            String confirmationCode = bookingService.saveBooking(roomId, bookingRequest);
+            return ResponseEntity.ok(
+                    "Room booked successfully, Your booking confirmation code is :"+confirmationCode);
+
+        }catch (Exception e){      //here some modification
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+	
+
+    @GetMapping("/confirmation/{confirmationCode}")
+    public ResponseEntity<?> getBookingByConfirmationCode(@PathVariable String confirmationCode){
+        try{
+            BookedRoom booking = bookingService.findByBookingConfirmationCode(confirmationCode);
+            BookingResponse bookingResponse = getBookingResponse(booking);
+            return ResponseEntity.ok(bookingResponse);
+        }catch (ResourceNotFoundException ex){
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ex.getMessage());
+        }
+    }
+
+	private BookingResponse getBookingResponse(BookedRoom booking) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+	 
+	 
+}

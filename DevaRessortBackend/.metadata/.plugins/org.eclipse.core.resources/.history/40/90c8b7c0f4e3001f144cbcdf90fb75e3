@@ -1,0 +1,38 @@
+package com.devaworks.DevaRessort.service;
+import com.devaworks.DevaRessort.exception.ResourceNotFoundException;
+
+import java.util.List;
+
+import org.springframework.stereotype.Service;
+
+import com.devaworks.DevaRessort.model.BookedRoom;
+import com.devaworks.DevaRessort.repository.BooingRepository;
+import com.devaworks.DevaRessort.repository.BookingRepository;
+
+
+@Service
+public class BookingService implements IBookingService {
+	
+   private final BookingRepository bookingRepository;
+	
+   public BookingService(BookingRepository bookingRepository) {
+		super();
+		this.bookingRepository = bookingRepository;
+	   }
+  
+	  @Override
+   public List<BookedRoom> getAllBookings() {
+	        return bookingRepository.findAll();
+	    }
+     @Override
+   public List<BookedRoom> getAllBookingsByRoomId(Long roomId) {
+	
+	   return bookingRepository.findByRoomId(roomId);
+	}
+
+	@Override
+	public BookedRoom findByBookingConfirmationCode(String confirmationCode) {
+		return bookingRepository.findByBookingConfirmationCode(confirmationCode)
+                .orElseThrow(() -> new ResourceNotFoundException("No booking found with booking code :"+confirmationCode));	}
+
+}

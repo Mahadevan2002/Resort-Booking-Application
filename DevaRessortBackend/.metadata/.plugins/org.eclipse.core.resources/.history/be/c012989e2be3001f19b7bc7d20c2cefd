@@ -1,0 +1,5 @@
+package com.devaworks.DevaRessort.exception;
+
+public class InternalServerException extends Exception {
+
+}

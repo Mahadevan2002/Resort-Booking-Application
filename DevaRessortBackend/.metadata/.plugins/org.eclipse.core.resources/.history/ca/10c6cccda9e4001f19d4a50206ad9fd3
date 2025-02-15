@@ -1,0 +1,25 @@
+package com.devaworks.DevaRessort.service;
+
+
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import com.devaworks.DevaRessort.model.Login;
+import com.devaworks.DevaRessort.repository.LoginRepository;
+
+@Service
+public class LoginService {
+
+    @Autowired
+    private LoginRepository loginRepository;
+
+    public boolean registerUser(Login login) {
+    	System.out.println("Hi i am from serviice" + login);
+        if (loginRepository.existsByUsername(login.getUsername())) {
+            return false; // Username already exists
+        }
+        loginRepository.save(login);
+        return true;
+    }
+}
